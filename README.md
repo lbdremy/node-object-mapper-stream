@@ -24,7 +24,7 @@ mapper.format.createMD5Hash = function(s){
 }
 var options = {
 	map : {
-		id : { to : 'newID', format : 'createMD5Hash', default : '00000'},
+		id : { to : 'newID', format : 'createMD5Hash', bydefault : '00000'},
 		title : { to : 'customTitle' , bydefault : 'noTitle'}
 	}
 };
