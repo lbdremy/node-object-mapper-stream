@@ -8,7 +8,7 @@ var mocha = require('mocha'),
 	mapper = require( libPath + '/../'),
 	tester = require('stream-tester');
 
-describe('MapperStream',function(){
+describe('ObjectMapperStream',function(){
 	describe('#write()',function(){
 		it('should emit `data` event with the right data',function(done){
 			var options = {

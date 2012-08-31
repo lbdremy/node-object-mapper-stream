@@ -36,11 +36,11 @@ function ObjectMapperStream(options){
 	this.options = options;
 	this.map = options.map;
 	this.commons = {};
-	var keys = Object.keys(this.map);
+	this.keys = Object.keys(this.map);
 	function write(data){
 		if(typeof data !== 'object') return console.error('skip this write call, `data` written is not an Object');
 		var newData = {};
-		keys.forEach(function(key){
+		self.keys.forEach(function(key){
 			var value = data[key];
 			var newKey = self.map[key].to || self.map[key];
 			var format = exports.format[self.map[key].format];

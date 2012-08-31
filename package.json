@@ -1,7 +1,7 @@
 {
-  "name": "mapper-stream",
+  "name": "object-mapper-stream",
   "version": "0.0.0",
-  "description": "Establish a mapping of a set of keys in a stream context.",
+  "description": "Map an object against a desired object and apply some transformations in a stream context",
   "main": "index.js",
   "dependencies" : {
     "through" : "1.0.x"
@@ -14,7 +14,7 @@
     "chai" : "1.2.x"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js && node test/stream-spec.js"
+    "test": "node test/stream-spec.js && ./node_modules/mocha/bin/mocha -R spec test/*-test.js"
   },
   "repository": {
     "type": "git",
