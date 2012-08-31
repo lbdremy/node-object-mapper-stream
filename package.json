@@ -1,6 +1,6 @@
 {
   "name": "object-mapper-stream",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Map an object against a desired object and apply some transformations in a stream context",
   "main": "index.js",
   "dependencies" : {
