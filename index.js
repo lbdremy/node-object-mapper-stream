@@ -13,7 +13,7 @@ exports.createStream = function(options){
 }
 
 /**
- * Expose object containing all formats method available/use.
+ * Expose bag object containing all formats method available to use.
  */
 
 exports.format = {};
@@ -41,18 +41,38 @@ function ObjectMapperStream(options){
 		if(typeof data !== 'object') return console.error('skip this write call, `data` written is not an Object');
 		var newData = {};
 		self.keys.forEach(function(key){
-			var value = data[key];
-			var newKey = self.map[key].to || self.map[key];
-			var format = exports.format[self.map[key].format];
-			if(value && format) return newData[newKey]  = format(value);
-			if(value) newData[newKey] = value;
-			var common = self.map[key].common;
-			if(common && value) return self.commons[key] = value;
-			if(common && !value) return newData[newKey] = self.commons[key];
-			var bydefault = self.map[key].bydefault;
-			if(bydefault) return newData[newKey] = bydefault;
-			return newData[newKey] = value;
+			var newKey = self.map[key]['to'];
+			if(!newKey) return newData[self.map[key]] = data[key];
+			
+			newData[newKey] = data[key];
+
+			standardize(key,newKey);
 		});
+
+		// Second pass to take care of the `copy` options
+		self.keys.forEach(function(key){
+			var copy = self.map[key]['copy'];
+			if(!copy) return;
+
+			var newKey = self.map[key]['to'];
+			var copyKeys = copy.split(',');
+			newData[newKey] = '';
+			copyKeys.forEach(function(copyKey){
+				newData[newKey] += newData[copyKey]
+			});
+
+			standardize(key,newKey);
+		});
+
+		function standardize(key,newKey){
+			var common = self.map[key]['common'];
+			var defaultValue = self.map[key]['bydefault'];
+			var format = self.map[key]['format'] && exports.format[self.map[key]['format']];
+			if(!newData[newKey] && defaultValue) newData[newKey] = defaultValue;
+			if(newData[newKey] && common) self.map[key]['bydefault'] = newData[newKey];
+			if(newData[newKey] && format) newData[newKey] = format(newData[newKey]);	
+		}
+
 		this.emit('data', newData);
 	}	
 	return through(write);

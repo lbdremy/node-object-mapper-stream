@@ -94,7 +94,7 @@ describe('ObjectMapperStream',function(){
 			// Extend the format Object expose by `mapper`.
 			mapper.format.createMD5Hash = function(s){
 				var crypto = require('crypto');
-				return crypto.createHash('md5').update(s,'utf-8').digest('hex');
+				return crypto.createHash('md5').update(s.toString(),'utf-8').digest('hex');
 			}
 			var stream = mapper.createStream(options);
 			tester.createRandomStream(function(){
@@ -107,6 +107,57 @@ describe('ObjectMapperStream',function(){
 					assert.isNotNull(data.newID);
 					assert.isNotNull(data.newTitle);
 					assert.deepEqual(data , { newID : 'cfcd208495d565ef66e7dff9f98764da', newTitle : 'title'});
+				})
+				.on('end',done);
+		});
+		it('should emit `data` events with the right data by applying the `copy` option.',function(done){
+			var options = {
+				map : {
+					id : { to : 'newID'},
+					title : { to : 'newTitle'},
+					description : { to : 'newDescription' , copy : 'newID,newTitle'}
+				}
+			};
+			var stream = mapper.createStream(options);
+			tester.createRandomStream(function(){
+				var o = { id : 0 , title : 'title'}
+				return o;
+			},10)
+				.pipe(stream)
+				.on('data',function(data){
+					assert.isObject(data);
+					assert.isNotNull(data.newID);
+					assert.isNotNull(data.newTitle);
+					assert.isNotNull(data.newDescription);
+					assert.deepEqual(data , { newID : 0, newTitle : 'title' , newDescription : '0title'});
+				})
+				.on('end',done);
+		});
+		it('should emit `data` events with the right data by applying the `copy` and `format` options.',function(done){
+			var options = {
+				map : {
+					id : { to : 'newID' , format :'createMD5Hash'},
+					title : { to : 'newTitle'},
+					description : { to : 'newDescription' , copy : 'newID,newTitle' , format :'createMD5Hash'}
+				}
+			};
+			// Extend the format Object expose by `mapper`.
+			mapper.format.createMD5Hash = function(s){
+				var crypto = require('crypto');
+				return crypto.createHash('md5').update(s.toString(),'utf-8').digest('hex');
+			}
+			var stream = mapper.createStream(options);
+			tester.createRandomStream(function(){
+				var o = { id : '0' , title : 'title'}
+				return o;
+			},10)
+				.pipe(stream)
+				.on('data',function(data){
+					assert.isObject(data);
+					assert.isNotNull(data.newID);
+					assert.isNotNull(data.newTitle);
+					assert.isNotNull(data.newDescription);
+					assert.deepEqual(data , { newID : 'cfcd208495d565ef66e7dff9f98764da', newTitle : 'title' , newDescription : 'eabcfd6054d4267bd5f83ba06a0e5540'});
 				})
 				.on('end',done);
 		});
