@@ -1,4 +1,6 @@
-# object-mapper-stream - map an object against a desired object and apply some transformations in a stream context
+# object-mapper-stream - 
+
+map an object against a desired object and apply some transformations in a stream context
 
 [![](http://travis-ci.org/lbdremy/node-object-mapper-stream.png)](http://travis-ci.org/#!/lbdremy/node-object-mapper-stream)
 
@@ -18,7 +20,7 @@ var objectMapper = require('object-mapper-stream'),
 	crypto = require('crypto');
 
 mapper.format.createMD5Hash = function(s){
-	return crypto.createHash('md5').update(s.toString(),'utf-8').digest('hex');
+	return crypto.createHash('md5').update(s,'utf-8').digest('hex');
 }
 var options = {
 	map : {
