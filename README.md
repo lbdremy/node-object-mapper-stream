@@ -6,7 +6,9 @@ map an object against a desired object and apply some transformations in a strea
 
 ## Install
 
-Not yet available in npm
+```sh
+npm install object-mapper-stream
+```
 
 ## Usage
 
